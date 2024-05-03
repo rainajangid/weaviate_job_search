@@ -1,0 +1,65 @@
+import weaviate
+import pandas as pd
+import requests
+import json
+
+import requests
+url = 'candidates_data3.json'
+# resp = requests.get(url)
+# data = json.loads(resp.text)
+data = json.load(open(url))
+
+client = weaviate.Client(
+    url="http://localhost:8080/"  # Replace with your Weaviate endpoint
+)
+
+# data = json.loads('candidates_data.json')
+
+# Prepare a batch process
+client.batch.configure(batch_size=100)  # Configure batch
+with client.batch as batch:
+    # Batch import all Questions
+    for i, d in enumerate(data):
+        print(f"importing candidate: {i+1}")  # To see imports
+
+        
+
+        properties = {
+            "accessible_ids": d["accessible_ids"],
+            "age": d["age"],
+            "candidate_id": d["candidate_id"],
+            "created_at": d["created_at"],
+            "creator_name": d["creator_name"],
+            "present_ctc": d["present_ctc"],
+            "current_company": d["current_company"],
+            "current_location": d["current_location"],
+            "custom_fields": d["custom_fields"],
+            "education": d["education"],
+            "expected_ctc": d["expected_ctc"],
+            "experience": d["experience"],
+            "formatted_candidate_history": d["formatted_candidate_history"],
+            "formatted_ctc": d["formatted_ctc"],
+            "formatted_current_company": d["formatted_current_company"],
+            "formatted_education": d["formatted_education"],
+            "formatted_previous_company": d["formatted_previous_company"],
+            "gender": d["gender"],
+            "headline": d["headline"],
+            "job_ids": d["job_ids"],
+            "key_skills": d["key_skills"],
+            "notice_period": d["notice_period"],
+            "organization_id": d["organization_id"],
+            "name": d["name"],
+            "other_skills": d["other_skills"],
+            "preferred_location": d["preferred_location"],
+            "previous_company": d["previous_company"],
+            "profile": d["profile"],
+            "profile_hash": d["profile_hash"],
+            "resume": d["resume"],
+            "supplier_ids": d["supplier_ids"],
+            "updated_at": d["updated_at"]
+        }
+       
+
+        batch.add_data_object(properties, "Candidates_data")
+
+

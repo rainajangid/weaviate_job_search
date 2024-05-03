@@ -1,0 +1,39 @@
+
+import weaviate
+import openpyxl
+import json
+# from weaviate import Batch
+from weaviate import Client
+
+
+client = weaviate.connect_to_local()
+
+def xlsx_to_json(xlsx_file_path, sheet_name):
+  """
+  Converts data from an XLSX sheet to a JSON list.
+
+  Args:
+      xlsx_file_path (str): Path to the XLSX file.
+      sheet_name (str): Name of the sheet containing the data.
+
+  Returns:
+      list: List of dictionaries representing the data rows.
+  """
+  workbook = openpyxl.load_workbook(xlsx_file_path)
+  sheet = workbook[sheet_name]
+# Get header row for property mapping
+  headers = [cell.value for cell in sheet[1]]
+# Iterate through data rows (excluding header)
+  data = []
+  for row in sheet.iter_rows(min_row=2):
+    row_data = {}
+    for i, cell in enumerate(row):
+      row_data[headers[i]] = cell.value
+    data.append(row_data)
+
+  return data
+
+# Example usage (replace with your file path and sheet name):
+candidates_data = xlsx_to_json("3corrected_sample_candidates_data2.xlsx", "Sheet1")
+with open("candidates_data3.json", "w") as f:
+  json.dump(candidates_data, f)

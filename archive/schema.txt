@@ -1,0 +1,268 @@
+import weaviate
+import weaviate.classes.config as wvc 
+from weaviate.classes.data import DataObject
+
+client = weaviate.connect_to_local()
+
+try:
+
+    candidate_data_schema =client.collections.create(
+    name="Candidates_Data",
+    properties= [
+        wvc.Property(
+            name="accessible_ids",
+            data_type=wvc.DataType.INT_ARRAY,
+            description="candidate accessible recruiter"
+        ),
+        wvc.Property(
+            name="age",
+            data_type=wvc.DataType.INT,
+            description="candidate age"
+        ),
+        wvc.Property(
+            name="candidate_id",
+            data_type=wvc.DataType.INT,
+            description="Unique identifier for the candidate"
+        ),
+        wvc.Property(
+            name="created_at",
+            data_type=wvc.DataType.DATE,
+            description="date and time at candidate creation"
+        ),
+        wvc.Property(
+            name="creator_name",
+            data_type=wvc.DataType.TEXT,
+            description="Candidate created by user"
+        ),
+        wvc.Property(
+            name="present_ctc",
+            data_type=wvc.DataType.NUMBER,
+            description="Current CTC of the candidate"
+        ),
+        wvc.Property(
+            name="current_company",
+            data_type=wvc.DataType.TEXT,
+            description="Current Company Name of a candidate"
+        ),
+        wvc.Property(
+            name="current_location",
+            data_type=wvc.DataType.TEXT,
+            description="Current location of candidate"
+        ),
+        wvc.Property(
+            name="custom_fields",
+            data_type=wvc.DataType.OBJECT_ARRAY,
+            description="Current CTC of the candidate",
+            nested_properties=[
+                wvc.Property(
+                    name="name",
+                    data_type=wvc.DataType.TEXT
+                ),
+                wvc.Property(
+                    name="value",
+                    data_type=wvc.DataType.TEXT
+                )
+            ]
+        ),
+        wvc.Property(
+            name="education",
+            data_type=wvc.DataType.TEXT_ARRAY,
+            description="candidate educations"
+        ),
+        wvc.Property(
+            name="expected_ctc",
+            data_type=wvc.DataType.NUMBER,
+            description="Expected CTC of the candidate"
+        ),
+        wvc.Property(
+            name="experience",
+            data_type=wvc.DataType.NUMBER,
+            description="total experience of candidate"
+        ),
+        wvc.Property(
+            name="formatted_candidate_history",
+            data_type=wvc.DataType.OBJECT_ARRAY,
+            description="formatted candidate history",
+            nested_properties=[
+                wvc.Property(
+                    name="job_title",
+                    data_type=wvc.DataType.TEXT
+                ),
+                wvc.Property(
+                    name="lead_status",
+                    data_type=wvc.DataType.TEXT
+                ),
+                wvc.Property(
+                    name="status_comment",
+                    data_type=wvc.DataType.TEXT
+                ),
+                wvc.Property(
+                    name="last_updated_at",
+                    data_type=wvc.DataType.DATE
+                ),
+                wvc.Property(
+                    name="created_by",
+                    data_type=wvc.DataType.INT
+                )
+            ]
+        ),
+        wvc.Property(
+            name="formatted_ctc",
+            data_type=wvc.DataType.OBJECT_ARRAY,
+            description="formatted candidate present and expected ctc",
+            nested_properties=[
+                wvc.Property(
+                    name="formatted_present_ctc",
+                    data_type=wvc.DataType.TEXT
+                ),
+                wvc.Property(
+                    name="formatted_expected_ctc",
+                    data_type=wvc.DataType.TEXT
+                )
+            ]
+        ),
+        wvc.Property(
+            name="formatted_current_company",
+            data_type=wvc.DataType.OBJECT_ARRAY,
+            description="formatted candidate present or last company",
+            nested_properties=[
+                wvc.Property(
+                    name="from",
+                    data_type=wvc.DataType.TEXT
+                ),
+                wvc.Property(
+                    name="profile",
+                    data_type=wvc.DataType.TEXT
+                ),
+                wvc.Property(
+                    name="company",
+                    data_type=wvc.DataType.TEXT
+                )
+            ]
+        ),
+        wvc.Property(
+            name="formatted_education",
+            data_type=wvc.DataType.OBJECT_ARRAY,
+            description="candidate education formatted",
+            nested_properties=[
+                wvc.Property(
+                    name="passing_year",
+                    data_type=wvc.DataType.NUMBER
+                ),
+                wvc.Property(
+                    name="college",
+                    data_type=wvc.DataType.TEXT
+                ),
+                wvc.Property(
+                    name="education",
+                    data_type=wvc.DataType.TEXT
+                )
+            ]
+        ),
+        wvc.Property(
+            name="formatted_previous_company",
+            data_type=wvc.DataType.OBJECT_ARRAY,
+            description="formatted candidate present or last company",
+            nested_properties=[
+                wvc.Property(
+                    name="from",
+                    data_type=wvc.DataType.TEXT
+                ),
+                wvc.Property(
+                    name="to",
+                    data_type=wvc.DataType.TEXT
+                ),
+                wvc.Property(
+                    name="profile",
+                    data_type=wvc.DataType.TEXT
+                ),
+                wvc.Property(
+                    name="company",
+                    data_type=wvc.DataType.TEXT
+                )
+            ]
+        ),
+        wvc.Property(
+            name="gender",
+            data_type=wvc.DataType.TEXT,
+            description="Gender of candidate"
+        ),
+        wvc.Property(
+            name="headline",
+            data_type=wvc.DataType.TEXT,
+            description="headline of candidate"
+        ),
+        wvc.Property(
+            name="job_ids",
+            data_type=wvc.DataType.INT_ARRAY,
+            description="Candidate applied job ids"
+        ),
+        wvc.Property(
+            name="key_skills",
+            data_type=wvc.DataType.TEXT_ARRAY,
+            description="Candidate Key Skills"
+        ),
+        wvc.Property(
+            name="notice_period",
+            data_type=wvc.DataType.NUMBER,
+            description="Candidate Notice Period"
+        ),
+        wvc.Property(
+            name="organization_id",
+            data_type=wvc.DataType.INT,
+            description="Candidate organization id"
+        ),
+        wvc.Property(
+            name="name",
+            data_type=wvc.DataType.TEXT,
+            description="Name for the candidate"
+        ),
+        wvc.Property(
+            name="other_skills",
+            data_type=wvc.DataType.TEXT_ARRAY,
+            description="Candidate Key Skills"
+        ),
+        wvc.Property(
+            name="preferred_location",
+            data_type=wvc.DataType.TEXT_ARRAY,
+            description="Candidate Preferred location"
+        ),
+        wvc.Property(
+            name="previous_company",
+            data_type=wvc.DataType.TEXT_ARRAY,
+            description="Candidate previous company"
+        ),
+        wvc.Property(
+            name="profile",
+            data_type=wvc.DataType.TEXT_ARRAY,
+            description="Candidate profile"
+        ),
+        wvc.Property(
+            name="profile_hash",
+            data_type=wvc.DataType.TEXT,
+            description="Candidate profile hash"
+        ),
+        wvc.Property(
+            name="resume",
+            data_type=wvc.DataType.TEXT,
+            description="The textual content of the candidate's resume"
+        ),
+        wvc.Property(
+            name="supplier_ids",
+            data_type=wvc.DataType.INT_ARRAY,
+            description="Candidate Supplier id"
+        ),wvc.Property(
+            name="updated_at",
+            data_type=wvc.DataType.DATE,
+            description="date and time at candidate updated"
+        )
+    ],
+    vectorizer_config=wvc.ConfigFactory.Vectorizer.text2vec_transformers()
+                        
+                        
+
+)
+    print(client.collection.exists("Candidates_Data"))
+    
+finally:
+    client.close()

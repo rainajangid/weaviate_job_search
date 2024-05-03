@@ -1,0 +1,42 @@
+import pandas as pd
+import json
+
+def correct_json_formatting(data):
+    """Attempt to aggressively fix common JSON formatting errors in a string."""
+    try:
+        # Convert to string in case the input data is not
+        data = str(data)
+        # Attempt to replace problematic single quotes with double quotes
+        corrected_data = data.replace("'", '"')
+        # Attempt to remove trailing commas at the end of lists or objects
+        corrected_data = corrected_data.rstrip(',')
+        # Try loading and dumping to ensure it's valid JSON
+        return json.dumps(json.loads(corrected_data), ensure_ascii=False)
+    except json.JSONDecodeError as e:
+        print(f"Could not correct data: {data}. Error: {e}")
+        return data  # Return original if correction fails
+    except Exception as e:
+        # Handle other generic errors
+        print(f"Unexpected error: {e}")
+        return data
+
+def preprocess_json_columns(excel_file_path, json_columns):
+    """Reads an Excel file, corrects JSON formatting in specified columns, and saves the output."""
+    try:
+        df = pd.read_excel(excel_file_path)
+        # Iterate over each JSON column and apply the correction
+        for column in json_columns:
+            if column in df.columns:
+                df[column] = df[column].astype(str).apply(correct_json_formatting)
+            else:
+                print(f"Column {column} not found in the Excel file.")
+        # Write corrected DataFrame to a new Excel file
+        df.to_excel('3corrected_' + excel_file_path, index=False)
+        print("Corrected data saved to 'corrected_" + excel_file_path + "'")
+    except Exception as e:
+        print(f"Failed to process the Excel file: {e}")
+
+# Usage
+if __name__ == "__main__":
+    json_columns = ['custom_fields', 'education', 'key_skills', 'other_skills', 'preferred_location', 'previous_company', 'profile', 'supplier_ids']  # Focus on these columns for JSON data
+    preprocess_json_columns('sample_candidates_data2.xlsx', json_columns)
